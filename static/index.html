@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NETDIAG — Network Diagnostic & Server Monitoring Toolkit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="scanline-overlay" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">◈</span>
+    <div class="brand-text">
+      <span class="brand-name">NETDIAG</span>
+      <span class="brand-sub">Diagnostic &amp; Monitoring Console</span>
+    </div>
+  </div>
+  <div class="topbar-sweep"></div>
+  <div class="topbar-right">
+    <div class="status-pill" id="overallStatus">
+      <span class="dot dot-ok"></span> SYSTEM NOMINAL
+    </div>
+    <div class="clock" id="clock">--:--:--</div>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- Control column -->
+  <section class="panel control-panel">
+    <h2 class="panel-title">Target</h2>
+    <label class="field-label" for="targetInput">Host / URL</label>
+    <input id="targetInput" class="target-input" type="text" placeholder="example.com" value="example.com" autocomplete="off">
+
+    <div class="control-stack">
+      <button class="ctrl-btn" data-action="ping">
+        <span class="ctrl-icon">⟐</span>
+        <span class="ctrl-label">PING</span>
+        <span class="ctrl-hint">ICMP reachability</span>
+      </button>
+      <button class="ctrl-btn" data-action="dns">
+        <span class="ctrl-icon">⌁</span>
+        <span class="ctrl-label">DNS LOOKUP</span>
+        <span class="ctrl-hint">Resolve &amp; reverse</span>
+      </button>
+      <button class="ctrl-btn" data-action="http">
+        <span class="ctrl-icon">◎</span>
+        <span class="ctrl-label">HTTP CHECK</span>
+        <span class="ctrl-hint">Status &amp; latency</span>
+      </button>
+      <button class="ctrl-btn" data-action="port">
+        <span class="ctrl-icon">▤</span>
+        <span class="ctrl-label">PORT SCAN</span>
+        <span class="ctrl-hint">Common ports</span>
+      </button>
+    </div>
+
+    <div class="port-spec-row">
+      <label class="field-label" for="portSpec">Port range</label>
+      <input id="portSpec" class="target-input small" type="text" value="common" placeholder="common | 1-1024 | 22,80,443">
+    </div>
+
+    <button class="ctrl-btn run-all" data-action="all">
+      <span class="ctrl-label">RUN FULL DIAGNOSTIC</span>
+    </button>
+  </section>
+
+  <!-- Gauges row -->
+  <section class="panel gauges-panel">
+    <h2 class="panel-title">Local Machine</h2>
+    <div class="gauges-row">
+      <div class="gauge" id="gaugeCpu">
+        <svg viewBox="0 0 120 120" class="gauge-svg">
+          <circle cx="60" cy="60" r="52" class="gauge-track"/>
+          <circle cx="60" cy="60" r="52" class="gauge-fill" data-fill></circle>
+        </svg>
+        <div class="gauge-readout">
+          <span class="gauge-value" data-value>0%</span>
+          <span class="gauge-label">CPU</span>
+        </div>
+      </div>
+      <div class="gauge" id="gaugeMem">
+        <svg viewBox="0 0 120 120" class="gauge-svg">
+          <circle cx="60" cy="60" r="52" class="gauge-track"/>
+          <circle cx="60" cy="60" r="52" class="gauge-fill" data-fill></circle>
+        </svg>
+        <div class="gauge-readout">
+          <span class="gauge-value" data-value>0%</span>
+          <span class="gauge-label">MEMORY</span>
+        </div>
+      </div>
+      <div class="gauge" id="gaugeDisk">
+        <svg viewBox="0 0 120 120" class="gauge-svg">
+          <circle cx="60" cy="60" r="52" class="gauge-track"/>
+          <circle cx="60" cy="60" r="52" class="gauge-fill" data-fill></circle>
+        </svg>
+        <div class="gauge-readout">
+          <span class="gauge-value" data-value>0%</span>
+          <span class="gauge-label">DISK</span>
+        </div>
+      </div>
+      <div class="net-throughput">
+        <div class="net-row">
+          <span class="net-arrow up">↑</span>
+          <span class="net-figure" id="netUp">0.0 KB/s</span>
+        </div>
+        <svg class="sparkline" id="sparkUp" viewBox="0 0 200 36" preserveAspectRatio="none"><polyline points=""/></svg>
+        <div class="net-row">
+          <span class="net-arrow down">↓</span>
+          <span class="net-figure" id="netDown">0.0 KB/s</span>
+        </div>
+        <svg class="sparkline" id="sparkDown" viewBox="0 0 200 36" preserveAspectRatio="none"><polyline points=""/></svg>
+        <div class="uptime-row">UPTIME <span id="uptime">—</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Terminal log -->
+  <section class="panel terminal-panel">
+    <h2 class="panel-title">Diagnostic Log <span class="panel-title-sub" id="logCount">0 events</span></h2>
+    <div class="terminal" id="terminal">
+      <div class="term-line term-boot">netdiag console ready — awaiting commands_</div>
+    </div>
+  </section>
+
+  <!-- Port matrix -->
+  <section class="panel ports-panel">
+    <h2 class="panel-title">Port Map</h2>
+    <div class="port-grid" id="portGrid">
+      <div class="port-empty">Run a port scan to populate</div>
+    </div>
+    <div class="port-legend">
+      <span><i class="swatch swatch-open"></i> open</span>
+      <span><i class="swatch swatch-closed"></i> closed</span>
+    </div>
+  </section>
+
+  <!-- Processes -->
+  <section class="panel proc-panel">
+    <h2 class="panel-title">Top Processes</h2>
+    <table class="proc-table">
+      <thead><tr><th>PID</th><th>Name</th><th>CPU%</th><th>MEM%</th></tr></thead>
+      <tbody id="procBody"></tbody>
+    </table>
+  </section>
+
+</main>
+
+<footer class="footer">
+  Network Diagnostic &amp; Server Monitoring Toolkit — Python · Flask · psutil
+</footer>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
