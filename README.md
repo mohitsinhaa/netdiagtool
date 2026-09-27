@@ -5,19 +5,11 @@ ways to use it:
 
 ## Features
 
-- **Ping diagnostics** — ICMP reachability, packet loss, min/avg/max
-  latency (falls back to a TCP-connect probe if ICMP is unavailable).
-- **DNS diagnostics** — forward resolution timing, IPv4/IPv6, aliases,
-  reverse DNS, and (if `dnspython` is installed) A/AAAA/MX/NS/TXT
-  record lookups.
-- **HTTP/HTTPS checks** — status code, response time, redirect chain,
-  content type/size, server header, and TLS certificate validity +
-  expiry countdown.
-- **Port connectivity testing** — fast threaded TCP-connect scan of
-  common ports or a custom list/range (`22,80,443`, `1-1024`, etc).
-- **System monitoring** — CPU (overall + per-core), memory, swap,
-  per-disk usage, live network throughput, uptime, and top processes
-  by CPU usage.
+- **Ping diagnostics**
+- **DNS diagnostics** 
+- **HTTP/HTTPS checks** 
+- **Port connectivity testing**
+- **System monitoring** 
 
 ## Project structure
 
