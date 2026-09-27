@@ -1,7 +1,6 @@
 # NETDIAG — Network Diagnostic & Server Monitoring Toolkit
 
-A Python toolkit for everyday network and server diagnostics, with two
-ways to use it:
+A Python toolkit for everyday network and server diagnostics.
 
 ## Features
 
